@@ -1,21 +1,51 @@
 ###
-GET http://localhost:6000/users/allusers
+GET http://localhost:5000/users/allusers
 Content-Type: application/json
 
 ###
-POST http://localhost:6000/users/login
+POST http://localhost:5000/users/login
 Content-Type: application/json
 
 {
     "email": "alice.agent@companyone.com",
     "password": "123456"
 }
-
 ###
-GET http://localhost:6000/users/agents
+GET http://localhost:5000/users/companies
+Content-Type: application/json
+###
+GET http://localhost:5000/users/agents
 Content-Type: application/json
 
 ###
-GET http://localhost:6000/users/clients
+GET http://localhost:5000/users/clients 
 Content-Type: application/json
 
+###
+POST http://localhost:5000/users/addCompany
+Content-Type: application/json
+
+{
+    "id": "C004",
+    "name": "Tiruma Productions",
+    "location": "Nairobi Kenya",
+    "owner": "Tiruma Awgak",
+    "contact_person_email": "Awgak@tiruma.co.ke"
+}
+###
+POST http://localhost:5000/users/addUser
+Content-Type: application/json
+
+{
+    "id": "U008",
+    "role": "client",
+    "email": "Awgak@tiruma.co.ke",
+    "password": "123456",
+    "phone_number": "555-7890",
+    "name": "Tiruma Awgak",
+    "company_id": "C004"
+}
+
+###
+GET http://localhost:5000/
+Content-Type: application/json

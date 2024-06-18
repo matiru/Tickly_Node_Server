@@ -69,9 +69,62 @@ module.exports ={
                     res.json(data.recordset)
                 } catch (error) {
                     console.log(error)
-                }}
+                }},
+        getCompanies: async (req, res) => {
+                    try {
+                        await pool.connect()
+                        let data = await pool.request().execute(`GetCompanies`)
+                        res.json(data.recordset)
+                    } catch (error) {
+                        console.log(error)
+                    }},
+        addCompany : async(req,res)=>{
+            const { id, name, location, owner, contact_person_email } = req.body;
+            try {
+                await pool.connect();
+                await pool.request()
+                    .input('id', sql.Char(4), id)
+                    .input('name', sql.VarChar(255), name)
+                    .input('location', sql.VarChar(255), location)
+                    .input('owner', sql.VarChar(255), owner)
+                    .input('contact_person_email', sql.VarChar(255), contact_person_email)
+                    .query(`
+                        INSERT INTO COMPANIES (id, name, location, owner, contact_person_email)
+                        VALUES (@id, @name, @location, @owner, @contact_person_email)
+                    `);
+                res.json({ message: 'Company added successfully' });
+            } catch (error) {
+                res.status(500).json({ message: error.message });
+            }
+        },
 
+        addUser : async (req, res) => {
+            const { id, email, role, password, phone_number, name, company_id } = req.body;
+            try {
+                // Hash the password
+                const hashedPassword = await bcrypt.hash(password, 10);
         
+                await pool.connect();
+                await pool.request()
+                    .input('id', sql.Char(4), id)
+                    .input('email', sql.VarChar(255), email)
+                    .input('role', sql.VarChar(20), role)
+                    .input('is_Active', sql.Bit, 1) // Assuming new user is active by default
+                    .input('password', sql.VarChar(255), hashedPassword)
+                    .input('phone_number', sql.VarChar(20), phone_number)
+                    .input('name', sql.VarChar(255), name)
+                    .input('created_at', sql.DateTime, new Date())
+                    .input('rating', sql.Int, 0) // Assuming initial rating is 0
+                    .input('company_id', sql.Char(4), company_id)
+                    .query(`
+                        INSERT INTO USERS (id, email, role, is_Active, password, phone_number, name, created_at, rating, company_id)
+                        VALUES (@id,  @email,@role, @is_Active, @password, @phone_number, @name, @created_at, @rating, @company_id)
+                    `);
+                res.json({ message: 'User added successfully' });
+            } catch (error) {
+                res.status(500).json({ message: error.message });
+            }
+        }
     
         
 

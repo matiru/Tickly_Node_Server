@@ -15,10 +15,11 @@ app.use((req,res,next)=>{
 });
 
 app.get('/',(req,res)=>{
-    res.json({message:'crm backend'})
+    res.json({message:'tickly backend'})
 })
 
 app.use('/users', userRouter);
 
 const port = process.env.PORT|| 6060;
+
 app.listen(port,()=>{console.log(`Server running on port ${port}`)})
